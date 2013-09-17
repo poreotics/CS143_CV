@@ -49,20 +49,22 @@ temp_image_cols = image_cols + 2*half_filter_cols;
 
 temp_image = zeros(temp_image_rows, temp_image_cols, image_channels);
 
-row_start = half_filter_rows + 1
-row_end = temp_image_rows - half_filter_rows
-col_start = half_filter_cols + 1
-col_end = temp_image_cols - half_filter_cols
+row_start = half_filter_rows + 1;
+row_end = temp_image_rows - half_filter_rows;
+col_start = half_filter_cols + 1;
+col_end = temp_image_cols - half_filter_cols;
 
 temp_image(row_start:row_end, col_start:col_end, :) = image;
 
-output = zeros(image_rows, image_cols);
+output = zeros(image_rows, image_cols, image_channels);
 
-for row = row_start:row_end
-    for col = col_start:col_end
-        value = temp_image(
-        output(row, col) = 
-
+for channel = 1:image_channels
+    for row = 1:image_rows
+        for col = 1:image_cols
+            output(row, col, channel) = sum(sum(temp_image(row:row+filter_rows-1, col:col+filter_cols-1, channel) .* filter));
+        end
+    end
+end
 
 
 
