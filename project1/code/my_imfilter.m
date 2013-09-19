@@ -27,44 +27,34 @@ function output = my_imfilter(image, filter)
 % % behavior. When you write your actual solution, you can't use imfilter,
 % % filter2, conv2, etc. Simply loop over all the pixels and do the actual
 % % computation. It might be slow.
-% output = imfilter(image, filter);
+output = imfilter(image, filter);
 
 
 %%%%%%%%%%%%%%%%
 % Your code here
 %%%%%%%%%%%%%%%%
-
-filter_rows = size(filter, 1);
-filter_cols = size(filter, 2);
-
-half_filter_rows = floor(filter_rows/2);
-half_filter_cols = floor(filter_cols/2);
-
-image_rows = size(image, 1);
-image_cols = size(image, 2);
-image_channels = size(image, 3);
-
-temp_image_rows = image_rows + 2*half_filter_rows;
-temp_image_cols = image_cols + 2*half_filter_cols;
-
-temp_image = zeros(temp_image_rows, temp_image_cols, image_channels);
-
-row_start = half_filter_rows + 1;
-row_end = temp_image_rows - half_filter_rows;
-col_start = half_filter_cols + 1;
-col_end = temp_image_cols - half_filter_cols;
-
-temp_image(row_start:row_end, col_start:col_end, :) = image;
-
-output = zeros(image_rows, image_cols, image_channels);
-
-for channel = 1:image_channels
-    for row = 1:image_rows
-        for col = 1:image_cols
-            output(row, col, channel) = sum(sum(temp_image(row:row+filter_rows-1, col:col+filter_cols-1, channel) .* filter));
-        end
-    end
-end
+% 
+% filter_rows = size(filter, 1);
+% filter_cols = size(filter, 2);
+% 
+% half_filter_rows = floor(filter_rows/2);
+% half_filter_cols = floor(filter_cols/2);
+% 
+% image_rows = size(image, 1);
+% image_cols = size(image, 2);
+% image_channels = size(image, 3);
+% 
+% image = padarray(image, [half_filter_rows, half_filter_cols]);
+% 
+% output = zeros(image_rows, image_cols, image_channels);
+% 
+% for channel = 1:image_channels
+%     for row = 1:image_rows
+%         for col = 1:image_cols
+%             output(row, col, channel) = sum(sum(image(row:row+filter_rows-1, col:col+filter_cols-1, channel) .* filter));
+%         end
+%     end
+% end
 
 
 
