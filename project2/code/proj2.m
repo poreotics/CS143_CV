@@ -11,7 +11,6 @@
 % (6) Evaluates the matches based on ground truth correspondences
 
 close all
-clear all
 
 % There are numerous other image sets in /course/cs143/asgn/proj2/data/
 % You can simply download images off the Internet, as well. However, the
@@ -24,6 +23,18 @@ clear all
 % need local features at multiple scales to handle harder cases.
 image1 = imread('../data/Notre Dame/921919841_a30df938f2_o.jpg');
 image2 = imread('../data/Notre Dame/4191453057_c86028ce1f_o.jpg');
+% 
+% image1 = imread('../data/Mount Rushmore/7433805428_d356ca07a0_o.jpg');
+% image2 = imread('../data/Mount Rushmore/9021235130_7c2acd9554_o.jpg');
+
+% image1 = imread('../data/Episcopal Gaudi/58936044_55d73729b1_o.jpg');
+% image2 = imread('../data/Episcopal Gaudi/390248678_7ab374203d_o.jpg');
+% 
+% image1 = imread('../data/House/IMG_0485.JPG');
+% image2 = imread('../data/House/IMG_0488.JPG');
+
+% image1 = imread('../data/Pantheon Paris/2093280693_da19bb8780_o.jpg');
+% image2 = imread('../data/Pantheon Paris/3665870978_550083ae6a_o.jpg');
 
 % You don't have to work with grayscale images. Matching with color
 % information might be helpful.
@@ -34,17 +45,19 @@ scale_factor = 0.5; %make images smaller to speed up the algorithm
 image1 = imresize(image1, scale_factor, 'bilinear');
 image2 = imresize(image2, scale_factor, 'bilinear');
 
-feature_width = 16; %width and height of each local feature, in pixels. 
+feature_width = 32; %width and height of each local feature, in pixels. 
 
 %% Find distinctive points in each image. Szeliski 4.1.1
 % !!! You will need to implement get_interest_points. !!!
+figure(1);
 [x1, y1] = get_interest_points(image1, feature_width);
+figure(2);
 [x2, y2] = get_interest_points(image2, feature_width);
 
 %% Create feature vectors at each interest point. Szeliski 4.1.2
 % !!! You will need to implement get_features. !!!
-[image1_features] = get_features(image1, x1, y1, feature_width);
-[image2_features] = get_features(image2, x2, y2, feature_width);
+[image1_features] = get_features(image1, y1, x1, feature_width);
+[image2_features] = get_features(image2, y2, x2, feature_width);
 
 
 %% Match features. Szeliski 4.1.3

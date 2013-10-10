@@ -23,40 +23,20 @@ function [matches, confidences] = match_features(features1, features2)
 % forms of spatial verification of matches.
 
 % Placeholder that you can delete. Random matches and confidences
-num_features1 = size(features1, 1);
-num_features2 = size(features2, 1);
 
-max_size = min(num_features1, num_features2);
+[idx, d] = knnsearch(features1, features2, 'K', 2);
 
-if num_features1 > num_features2
-    tmp = features1;
-    features1 = features2;
-    features2 = tmp;
-end
+matches = [];
+confidences = [];
 
-matches = zeros(max_size, 2);
-confidences = zeros(max_size, 1);
-
-match_index = 1;
-
-for i = 1:num_features1
-    distances = zeros(num_features2, 1);
-    for j = 1:num_features2
-        distances(j) = norm(features1(i) - features2(j));
-    end
-    [sorted_distances, idx] = sort(distances);
-    if sorted_distances(2) > 0
-        ratio = sorted_distances(1) / sorted_distances(2);
-        if ratio < 0.8
-            matches(match_index, :) = [i, idx(1)];
-            confidences(match_index) = 1 - ratio;
-            match_index = match_index + 1;
-        end
+for i = 1:size(idx, 1)
+    indexes = idx(i, :);
+    distances = d(i, :);
+    if distances(1) / distances(2) < 0.76
+        matches = [matches; indexes(1) i];
+        confidences = [confidences; 1 - distances(1)];
     end
 end
-
-matches(match_index:end, :) = [];
-confidences(match_index:end, :) = [];
 
 % Sort the matches so that the most confident onces are at the top of the
 % list. You should probably not delete this, so that the evaluation

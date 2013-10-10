@@ -130,70 +130,55 @@ td img {
 <body>
 <div id="header" >
 <div id="headersub">
-<h1>Your Name <span style="color: #DE3737">(your cs id)</span></h1>
+<h1>Cheng Xie <span style="color: #DE3737">(cxie)</span></h1>
 </div>
 </div>
 <div class="container">
 
 <h2>CS 143 / Project 2 / Local Feature Matching</h2>
 
-<div style="float: right; padding: 20px">
+<div style="float: right; padding: 10px">
 <img src="placeholder.jpg" />
-<p style="font-size: 14px">Example of a right floating element.</p>
 </div>
 
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-<ol>
-<li>list element 1.</li>
-<li>list element 2.</li>
-<li>etc.</li>
-</ol>
-
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+<p>In this project, I implemented harris corner detector, SIFT feature descriptor and normalized patch descriptor, and feature matching algorithm by using nearest neighbour distance ratio test. Local feature matching is done by first extracting interest points with harris corner detector, then calculate a SIFT descriptor for every interest points, and finally matching these interest points using their descriptors. </p>
+<p>
 <div style="clear:both">
-<h3>Example heading</h3>
+</p>
+<h3>Getting interest points</h3>
 
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-<h2>Example of code with highlighting</h2>
-The javascript in the <code>highlighting</code> folder is configured to do syntax highlighting in code blocks such as the one below.<p>
-
-<pre><code>
-%example code
-for i = 1:length(offset)
-    source = imread(sprintf('%s/source_%02d.jpg',data_dir,i));
-    mask   = imread(sprintf('%s/mask_%02d.jpg',data_dir,i));
-    target = imread(sprintf('%s/target_%02d.jpg',data_dir,i));
-
-</code></pre>
-
-<h3>Results in a table</h3>
-
-<table border=1>
-<tr>
-<td>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg"  width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-</td>
-</tr>
-
-<tr>
-<td>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg"  width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-</td>
-</tr>
-
-</table>
-
-<div style="clear:both" >
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-</div>
+<p>I implemented harris corner detector by taking the following steps:</p>
+<ol>
+  <li>Blur the image using gaussian filter with sigma1 = 0.5.</li>
+  <li>Get partial derivatives of the image Ix, Iy along x, y using sobel filter.</li>
+  <li>Calculate Ix*Ix, Ix*Iy, Iy*Iy and apply gaussian filter on them with sigma2 = 3.</li>
+  <li>Generate the harris corner response image by using the formula in the slides with alpha = 0.04.</li>
+  <li>Remove the interest points near the edge, so that there will be enough pixels for descriptors.</li>
+  <li>Threshold the response image with threshold = 0.02.</li>
+  <li>Perform non-maximum suppression using a 3x3 window.</li>
+  <li>Return the maximum points as interest points.</li>
+</ol>
+<p>The above parameters: sigma1, sigma2, alpha, threshold, and sliding windows size can have huge influence on the final result. After some experiments, I found the above values can produce reasonably well results as shown below.</p>
+<p><img src="images/points.png" width="500" height="668" alt=""/></p>
+<h3>Generating feature descriptors</h3>
+<p>I implemented two methods for generating feature descriptors, one is normalized patches and another is SIFT descriptor. For normalized patches, I just take the pixels in a square region around the interest points, normalize them, and use them as descriptors. For SIFT descriptors, I took the following steps:</p>
+<ol>
+  <li>Get partial derivatives of the image Ix, Iy along x, y using sobel filter.</li>
+  <li>Compute the magnitute image using Ix and Iy.</li>
+  <li>Compute the gradient image using Ix, Iy and atan2, and map the gradients into angles.</li>
+  <li>For each interest point, take the pixels around it according to feature width and compute SIFT descriptor for it by using the data from the magnitute image and gradient image.</li>
+  <li>Normalize the SIFT descriptor.</li>
+</ol>
+<p>According the results shown below, SIFT descriptor performs much better than normalized patches. For the baseline images, SIFT descriptor can achieve 51 total good matches and 6 total bad matches, while normalized patches can only get 15 total good matches, 6 total bad matches.</p>
+<p>Feature width can also have impact on the results. According to experiments, feature width 16 can get 44 total good matches, 8 total bad matches, while feature width 32 can get 51 total good matches, 6 total bad matches.</p>
+<p><img src="images/normalized_res.jpg" alt="" width="434" height="307"/><img src="placeholder.jpg" width="400" height="251" alt=""/></p>
+<p>Left: Normalized patches.  Right: SIFT</p>
+<h3>Matching features</h3>
+<p>I implemented nearest neighbour ratio test for matching features. First I calculate distances for each feature descriptor in image1 to all the feature descriptors in image2, then for each feature descriptor in image1, if the ratio between two least distances with feature descriptors of image2 is less than 0.76, a correspondence is found.</p>
+<p>The value of ratio can have huge impact on the result. If the value is increased, more wrong correspondence will be found. If the value is descreased, less correct correspondence will be found.</p>
+<h3>Other results</h3>
+<p>According to results, if the scale or orientation of the two images differs greatly, the results wouldn't be ideal.</p>
+<p><img src="images/mountain.jpg" width="1440" height="800" alt=""/><img src="images/house.jpg" width="1440" height="800" alt=""/></p>
+<p>&nbsp;</p>
 </body>
 </html>

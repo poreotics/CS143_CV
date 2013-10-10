@@ -18,30 +18,14 @@
 %   do not need to make scale and orientation invariant local features.
 function [x, y, confidence, scale, orientation] = get_interest_points(image, feature_width)
 
-% Implement the Harris corner detector (See Szeliski 4.1.1) to start with.
-% You can create additional interest point detector functions (e.g. MSER)
-% for extra credit.
-
-% If you're finding spurious interest point detections near the boundaries,
-% it is safe to simply suppress the gradients / corners near the edges of
-% the image.
-
-% The lecture slides and textbook are a bit vague on how to do the
-% non-maximum suppression once you've thresholded the cornerness score.
-% You are free to experiment. Here are some helpful functions:
-%  BWLABEL and the newer BWCONNCOMP will find connected components in 
-% thresholded binary image. You could, for instance, take the maximum value
-% within each component.
-%  COLFILT can be used to run a max() operator on each sliding window. You
-% could use this to ensure that every interest point is at a local maximum
-% of cornerness.
-
 sigma = 3;
-alpha = 0.06;
-threshold = 0.1;
+alpha = 0.04;
+threshold = 0.02;
 
 g = fspecial('gaussian', 4*sigma+1, sigma);
 sobel = fspecial('sobel');
+
+image = imfilter(image, fspecial('gaussian'));
 
 ix = imfilter(image, sobel');
 iy = imfilter(image, sobel);
@@ -60,16 +44,15 @@ corner(:, end-feature_width:end) = 0;
 maxvalue = max(max(corner));
 corner = corner .* (corner > threshold * maxvalue);
 
-result = colfilt(corner, [5 5], 'sliding', inline('max(x)'));
+result = colfilt(corner, [3 3], 'sliding', inline('max(x)'));
 corner = corner .* (corner == result);
-
-imshow(corner);
 
 [y, x] = find(corner);
 
-% hold on;
-% plot(x , y, 'r.');
-% hold off;
+imshow(image);
+hold on;
+plot(x , y, 'r.');
+hold off;
 
 end
 

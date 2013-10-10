@@ -52,7 +52,7 @@ function [features] = get_features(image, x, y, feature_width)
 % Another simple trick which can help is to raise each element of the final
 % feature vector to some power that is less than one.
 
-features = zeros(size(x,1), 4, 4, 8);
+features = zeros(size(x, 1), 4, 4, 8);
 % features = zeros(size(x,1), feature_width * feature_width);
 
 sobel = fspecial('sobel');
@@ -61,8 +61,8 @@ dx = imfilter(image, sobel');
 dy = imfilter(image, sobel);
 
 magnitude = sqrt( dx .* dx + dy .* dy );
-angel = atan2(dy, dx) + pi;
-angel = mod( floor(angel / (2*pi) * 8), 8 ) + 1;
+angle = atan2(dy, dx) + pi;
+angle = mod( floor(angle / (2*pi) * 8), 8 ) + 1;
 
 half_width = feature_width / 2;
 
@@ -74,15 +74,15 @@ for i = 1:size(x, 1)
     y1 = py - half_width + 1;
     y2 = py + half_width;
     
-%     pixels = image(y1:y2, x1:x2);
+%     pixels = image(x1:x2, y1:y2);
 %     features(i, :) = pixels(:);
     
-    for row = y1:y2
-        for col = x1:x2
-            cell_row = floor((row-y1)/4)+1;
-            cell_col = floor((col-x1)/4)+1;
-            features(i, cell_row, cell_col, angel(row, col)) = ...
-                features(i, cell_row, cell_col, angel(row, col)) + ...
+    for row = x1:x2
+        for col = y1:y2
+            cell_row = floor((row-x1)/(feature_width/4))+1;
+            cell_col = floor((col-y1)/(feature_width/4))+1;
+            features(i, cell_row, cell_col, angle(row, col)) = ...
+                features(i, cell_row, cell_col, angle(row, col)) + ...
                 magnitude(row, col);
         end
     end
