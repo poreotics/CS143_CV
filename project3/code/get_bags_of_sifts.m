@@ -58,8 +58,28 @@ and using KD-trees.
 
 %}
 
+bin_size = 8;
+step = 8;
+
 load('vocab.mat')
-vocab_size = size(vocab, 2);
+vocab_size = size(vocab, 1);
+image_feats = zeros(size(image_paths, 1), vocab_size);
+
+for i = 1:size(image_paths, 1)
+    i
+    path = image_paths{i};
+    im = imread(path);
+    im = im2single(im);
+    [locations, features] = vl_dsift(im, 'size', bin_size, 'step', step);
+    d = vl_alldist2(vocab', single(features));
+    [v, indices] = min(d);
+    for j = 1:size(indices, 2)
+        image_feats(i, indices(j)) = image_feats(i, indices(j)) + 1;
+    end
+    image_feats(i, :) = image_feats(i, :) / norm(image_feats(i, :));
+end
+
+    
 
 
 

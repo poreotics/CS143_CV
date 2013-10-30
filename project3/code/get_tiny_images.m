@@ -19,8 +19,18 @@ function image_feats = get_tiny_images(image_paths)
 % unit length (normalizing them) will increase performance modestly.
 
 % suggested functions: imread, imresize
-
-
+image_feats = zeros(size(image_paths, 1), 256);
+for i = 1:size(image_paths)
+    path = image_paths{i};
+    im = imread(path);
+    im = imresize(im, [16 16]);
+    im = im2double(im);
+    im = im(:);
+    im = im - mean(im);
+    im = im / norm(im);
+    image_feats(i, :) = im;
+end
+    
 
 
 

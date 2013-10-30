@@ -16,12 +16,10 @@
 %results are presented.
 
 % FEATURE = 'tiny image';
-% FEATURE = 'bag of sift';
-FEATURE = 'placeholder';
+FEATURE = 'bag of sift';
 
 % CLASSIFIER = 'nearest neighbor';
-% CLASSIFIER = 'support vector machine';
-CLASSIFIER = 'placeholder';
+CLASSIFIER = 'support vector machine';
 
 % set up paths to VLFeat functions. 
 % See http://www.vlfeat.org/matlab/matlab.html for VLFeat Matlab documentation
@@ -129,7 +127,7 @@ end
 
 
 
-%% Step 3: Build a confusion matrix and score the recognition system
+% Step 3: Build a confusion matrix and score the recognition system
 % You do not need to code anything in this section. 
 
 % If we wanted to evaluate our recognition method properly we would train
@@ -137,7 +135,7 @@ end
 % for this project.
 
 % This function will recreate results_webpage/index.html and various image
-% thumbnails each time it is called. View the webpage to help interpret
+% thumbnails each time it is c0alled. View the webpage to help interpret
 % your classifier performance. Where is it making mistakes? Are the
 % confusions reasonable?
 create_results_webpage( train_image_paths, ...

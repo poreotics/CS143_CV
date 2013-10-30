@@ -39,6 +39,10 @@ Useful functions:
 
 %}
 
+d = vl_alldist2(train_image_feats', test_image_feats');
+[v, i] = min(d);
+predicted_categories = train_labels(i');
+
 
 
 

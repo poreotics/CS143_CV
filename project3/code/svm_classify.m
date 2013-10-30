@@ -48,5 +48,26 @@ Useful functions:
 categories = unique(train_labels); 
 num_categories = length(categories);
 
+lambda = 0.01;
+
+all_w = zeros(size(train_image_feats, 2), num_categories);
+all_b = zeros(1, num_categories);
+
+for i = 1:num_categories
+    cat = categories{i};
+    labels = strcmp(cat, train_labels);
+    labels = 2 * (labels - 0.5);
+    [w, b] = vl_svmtrain(train_image_feats', labels, lambda);
+    all_w(:, i) = w;
+    all_b(1, i) = b;
+end
+
+confidences = test_image_feats * all_w;
+for i = 1:size(confidences, 1)
+    confidences(i, :) = confidences(i, :) + b(1, :);
+end
+
+[values, indices] = max(confidences');
+predicted_categories = categories(indices);
 
 
