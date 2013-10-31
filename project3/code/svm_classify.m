@@ -48,7 +48,7 @@ Useful functions:
 categories = unique(train_labels); 
 num_categories = length(categories);
 
-lambda = 0.01;
+lambda = 0.0005;
 
 all_w = zeros(size(train_image_feats, 2), num_categories);
 all_b = zeros(1, num_categories);
@@ -64,7 +64,7 @@ end
 
 confidences = test_image_feats * all_w;
 for i = 1:size(confidences, 1)
-    confidences(i, :) = confidences(i, :) + b(1, :);
+    confidences(i, :) = confidences(i, :) + all_b;
 end
 
 [values, indices] = max(confidences');

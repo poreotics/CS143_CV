@@ -58,7 +58,7 @@ and using KD-trees.
 
 %}
 
-bin_size = 8;
+bin_size = 4;
 step = 8;
 
 load('vocab.mat')
@@ -70,7 +70,7 @@ for i = 1:size(image_paths, 1)
     path = image_paths{i};
     im = imread(path);
     im = im2single(im);
-    [locations, features] = vl_dsift(im, 'size', bin_size, 'step', step);
+    [locations, features] = vl_dsift(im, 'size', bin_size, 'step', step, 'fast');
     d = vl_alldist2(vocab', single(features));
     [v, indices] = min(d);
     for j = 1:size(indices, 2)
