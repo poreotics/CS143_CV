@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>CS 143 Project</title>
+<link href='http://fonts.googleapis.com/css?family=Nunito:300|Crimson+Text|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" title="Default" href="styles/github.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>  
+
+<link rel="stylesheet" href="highlighting/styles/default.css">
+<script src="highlighting/highlight.pack.js"></script>
+
+<style type="text/css">
+body {
+	margin: 0px;
+	width: 100%;
+	font-family: 'Crimson Text', serif;
+	font-size: 20px;
+	background: #fcfcfc;
+}
+h1 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 28px;
+	margin: 25px 0px 0px 0px;
+	text-transform: lowercase;
+
+}
+
+h2 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 32px;
+	margin: 15px 0px 35px 0px;
+	color: #333;	
+	word-spacing: 3px;
+}
+
+h3 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 26px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+h4 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 22px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+
+h5 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 18px;
+	margin: 10px 0px 10px 0px;
+	color: #111;
+	word-spacing: 2px;
+}
+
+p, li {
+	color: #444;
+}
+
+a {
+	color: #DE3737;
+}
+
+.container {
+	margin: 0px auto 0px auto;
+	width: 1160px;
+}
+
+#header {
+	background: #333;
+	width: 100%;
+}
+
+#headersub {
+	color: #ccc;
+	width: 960px;
+	margin: 0px auto 0px auto;
+	padding: 20px 0px 20px 0px;
+}
+
+.chart {
+	width: 480px;
+}
+.lol {
+	font-size: 16px;
+	color: #888;
+	font-style: italic;
+}
+.sep {
+	height: 1px;
+	width: 100%;
+	background: #999;
+	margin: 20px 0px 20px 0px;
+}
+.footer{
+	font-size: 16px;
+}
+.latex {
+	width: 100%;
+}
+
+.latex img {
+	display: block;
+	margin: 0px auto 0px auto;
+}
+
+pre {
+	font-family: 'Droid Sans Mono';
+	font-size: 14px;
+}
+
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table td img {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#contents a {
+}
+</style>
+<script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="header" >
+<div id="headersub">
+<h1>Cheng Xie <span style="color: #DE3737">(cxie)</span></h1>
+</div>
+</div>
+<div class="container">
+
+<h2>CS 143 / Project 4 / Face Detection with a Sliding Window</h2>
+
+<p>In this project, I implemented face detection using sliding window algorithm. 
+First, I got positive HoG features from training images. Then I got negative HoG features
+from non-face images by randomly taking crops from them. I experimented with the number of 
+negative examples, but increasing it from 10,000 to 20,000 didn't make a big difference.
+I also tried randomly scaling negative images before croping them to get HoGs, but it didn't
+contribute much either. After I got the positive and negative features, I used them to get a linear
+classifier. I experimented with different lamda values, and 0.0001 works pretty good for me.</p>
+<p>After I got the classifier, I tested on windows of each scale of each test images, and ran non-maximum supression for each image after all the scales have been tested. I tested with various
+scaling step size, and the smaller the step size, the better result I would get. A step scale of 0.95 works well. I chose a confidence threshold of 1.0. The higher the threshold, the less false positives, but also the less true positives. The below images are the results.</p>
+
+<img src="img/precision_recal.jpg" />
+<img src="img/detections_cs143_2011_class_easy.jpg.png" />
+<img src="img/detections_cs143_2013_class_easy_01.jpg.png" />
+<img src="img/detections_cs143_2013_class_hard_01.jpg.png" />
+<img src="img/detections_faculty_roster.jpg.png" />
+
+</body>
+</html>
