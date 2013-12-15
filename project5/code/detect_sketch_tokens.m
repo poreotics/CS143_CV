@@ -33,6 +33,9 @@ end
 [hs, ps] = forestApply(features, forest);
 pb = 1 - ps(:, 1);
 pb = reshape(pb, width, height)';
+
+pb = imfilter(pb, fspecial('gaussian', 9, 1.5));
+
 pb = stToEdges(pb);
 
 % Stack all of the image features into one matrix. This will be redundant

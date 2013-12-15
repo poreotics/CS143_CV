@@ -114,7 +114,7 @@ feature_params = struct('R', 15, 'RQ', 3, 'TQ', 8, 'HQ', 8, 'SI', 1, 'LI', 1, 'N
 %      2 = Full Normalization
 %      3 = Sift like normalization    
 
-num_sketch_tokens = 50;
+num_sketch_tokens = 150;
 
 % a. Get Sketch Tokens and the training examples. From the training
 %    directory, load pairs of images and annotations.
