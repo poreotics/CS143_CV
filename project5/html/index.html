@@ -128,6 +128,22 @@ table td img {
 
 #contents a {
 }
+    .auto-style1 {
+        width: 373px;
+        height: 240px;
+    }
+    .auto-style2 {
+        width: 373px;
+        height: 453px;
+    }
+    .auto-style3 {
+        width: 373px;
+        height: 138px;
+    }
+    .auto-style4 {
+        width: 1200px;
+        height: 900px;
+    }
 </style>
 <script type="text/javascript">
     hljs.initHighlightingOnLoad();
@@ -136,77 +152,31 @@ table td img {
 <body>
 <div id="header" >
 <div id="headersub">
-<h1>Your Name <span style="color: #DE3737">(your cs id)</span></h1>
+<h1>Cheng Xie <span style="color: #DE3737">(cxie)</span></h1>
 </div>
 </div>
 <div class="container">
 
 <h2>CS 143 / Project 5 / Boundary Detection with Sketch Tokens</h2>
 
-<div style="float: right; padding: 20px">
-<img src="placeholder.jpg" />
-<p style="font-size: 14px">Example of a right floating element.</p>
-</div>
-
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-<ol>
-<li>list element 1.</li>
-<li>list element 2.</li>
-<li>etc.</li>
-</ol>
-
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p> 	In this assignment, I implemented boundary detection with sketch tokens. To train the classifier, first I need to get positive and negative training data from the training images. I got positive training data by randomly extracting image feature patches centered at boundary location according to ground truth. The image feature descriptor is a 14-channel image patch. To compute the image feature, oriented gradient magnitudes of image are needed. I computed the oriented gradient magnitutdes of image by rotating a sobel filter by 0, 45, 90 and 135 degrees amd then filter the image. For each positive training data, I also computed the daisy descriptor associated with it using the ground truth boundary data. For negative training data, I extracted the 14-channel image features from random locations where it&#39;s not on boundary. Then I clustered the daisy descriptors and put the resulting labels on their associated 14-channel image features. Negative features are assigned a label of 1, 
+    while positive features are assigned labels greater than one. After the labeling step, I used these data to train the random forest classifier. Then for each pixel of a test image, I used the classifiers and the 14-channel representation of the pixel to compute the probability of it being on edge. After this, I got a probability image. Finally I blurred it and performed non-maximum supression on it to get the final result. If I don&#39;t blur the probability image, I can only get the lower half of the precision-recall curve. I achieved a best F score of 0.67. </p>
+    <p> 	According to my experiments, using sketch token just gave me about 0.01 increase of the F score, and the number of sketch tokens almost had no effect on the result. I also tried to avoid extract negative features near boundaries, but it had little effect. Increasing the number of samples improved the results but increasing the size of patch didn&#39;t improve much.</p>
+    <p> 	
+        <img alt="" class="auto-style1" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/small_test/3063.jpg" /><img alt="" class="auto-style1" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/canny_baseline/3063.png" /><img alt="" class="auto-style1" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/sketch_tokens/3063.png" /></p>
+    <p> 	
+        <img alt="" class="auto-style2" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/small_test/196027.jpg" /><img alt="" class="auto-style2" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/canny_baseline/196027.png" /><img alt="" class="auto-style2" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/sketch_tokens/196027.png" /></p>
+    <p> 	
+        <img alt="" class="auto-style3" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/small_test/112056.jpg" /><img alt="" class="auto-style3" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/canny_baseline/112056.png" /><img alt="" class="auto-style3" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/sketch_tokens/112056.png" /></p>
 
 <div style="clear:both">
-<h3>Example heading</h3>
-
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-<h2>Example of code with highlighting</h2>
-The javascript in the <code>highlighting</code> folder is configured to do syntax highlighting in code blocks such as the one below.<p>
-
-<pre><code>
-%example code
-for i = 1:length(offset)
-    source = imread(sprintf('%s/source_%02d.jpg',data_dir,i));
-    mask   = imread(sprintf('%s/mask_%02d.jpg',data_dir,i));
-    target = imread(sprintf('%s/target_%02d.jpg',data_dir,i));
-
-</code></pre>
-
-<h3>Results in a table</h3>
-
-<table border=1>
-<tr>
-<td>
-<img src="36046.jpg" width="24%"/>
-<img src="36046_canny.png"  width="24%"/>
-<img src="36046_st.png" width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-</td>
-</tr>
-
-<tr>
-<td>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg"  width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-<img src="placeholder.jpg" width="24%"/>
-</td>
-</tr>
-
-</table>
 
 <center>
 <p>
-<img src="average_precision.png">
-F score of 0.70
-
-</center>
+&nbsp;<img alt="" class="auto-style4" src="file:///C:/Users/Cheng/Desktop/CS143_CV/project5/html/average_precision.png" /><p>
+        F score of 0.67</center>
 
 <div style="clear:both" >
-<p> 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </div>
 </body>
 </html>
